@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentTrackingSystem.Data
+namespace StudentTrackingSystem.Data.Models
 {
     public abstract class BaseEntity
     {

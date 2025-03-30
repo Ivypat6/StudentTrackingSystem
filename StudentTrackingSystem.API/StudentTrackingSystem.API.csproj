@@ -20,4 +20,9 @@
     <PackageReference Include="Microsoft.ML" Version="4.0.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StudentTrackingSystem.Service\StudentTrackingSystem.Service.csproj" />
+    <ProjectReference Include="..\StudentTrackingSystem.Shared\StudentTrackingSystem.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
