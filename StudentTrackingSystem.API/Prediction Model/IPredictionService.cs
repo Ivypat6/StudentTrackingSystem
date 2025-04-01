@@ -1,6 +1,13 @@
-﻿namespace StudentTrackingSystem.API.Prediction_Model
+﻿using StudentTrackingSystem.Data.Models;
+using StudentTrackingSystem.Shared.Dto;
+
+namespace StudentTrackingSystem.API.Prediction_Model
 {
-    public class IPredictionService
+    public interface IPredictionService
     {
+        Task<PredictionResultDto> PredictStudentPerformanceAsync(Student
+    student, IEnumerable<Grade> grades, IEnumerable<Attendance>
+    attendances, IEnumerable<BehaviorRecord> behaviorRecords);
+        Task TrainModelAsync();
     }
 }

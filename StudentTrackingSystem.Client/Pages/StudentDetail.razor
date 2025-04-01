@@ -1,5 +1,20 @@
-﻿<h3>StudentDetail</h3>
-
-@code {
-
-}
+﻿@page "/students/{id:int}" 
+@* @using StudentTrackingSystem.Shared.DTOs  *@
+@using StudentTrackingSystem.Shared.Dto
+@inject IStudentService StudentService 
+@inject NavigationManager Navigation 
+ 
+<AuthorizeView Roles="Admin,Teacher,Student"> 
+    <Authorized> 
+<Component />    </Authorized> 
+</AuthorizeView> 
+ 
+    @code { 
+        [Parameter] public int Id { get; set; } 
+        private StudentDto _student; 
+     
+        protected override async Task OnParametersSetAsync() 
+        { 
+            _student = await StudentService.GetStudentByIdAsync(Id); 
+        } 
+    } 

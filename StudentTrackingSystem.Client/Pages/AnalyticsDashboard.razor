@@ -1,5 +1,144 @@
-﻿<h3>AnalyticsDashboard</h3>
-
-@code {
-
-}
+﻿@page "/analytics" 
+@using StudentTrackingSystem.Client.Components
+@using StudentTrackingSystem.Shared.Dto
+@inject IAnalyticsService AnalyticsService 
+@inject NavigationManager Navigation 
+ 
+<AuthorizeView Roles="Admin,Teacher"> 
+    <Authorized> 
+       <h3>Analytics Dashboard</h3> 
+         
+        @if (_predictions == null || _stats == null) 
+        { 
+            <p>Loading...</p> 
+        } 
+        else 
+        { 
+            <div class="row mb-4"> 
+                <div class="col-md-3"> 
+                    <div class="card text-white bg-success"> 
+                        <div class="card-body"> 
+                            <h5 class="card-title">Excelling</h5> 
+                            <p class="cardtext">@_stats.ExcellingCount students</p> 
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="col-md-3"> 
+                    <div class="card text-white bg-primary"> 
+                        <div class="card-body"> 
+                            <h5 class="card-title">On Track</h5> 
+                            <p class="card-text">@_stats.OnTrackCount students</p> 
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="col-md-3"> 
+                    <div class="card text-white bg-warning"> 
+                        <div class="card-body"> 
+                            <h5 class="card-title">At Risk</h5> 
+                            <p class="card-text">@_stats.AtRiskCount students</p> 
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="col-md-3"> 
+                    <div class="card text-white bg-info"> 
+                        <div class="card-body"> 
+                            <h5 class="card-title">Total Students</h5> 
+                            <p class="card-text">@_stats.TotalStudents</p> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+             
+            <div class="card"> 
+                <div class="card-header"> 
+                    <h4>Performance Predictions</h4> 
+                </div> 
+                <div class="card-body"> 
+                    <table class="table"> 
+                        <thead> 
+                            <tr> 
+                                <th>Student</th> 
+                                <th>Prediction</th> 
+                                <th>Confidence</th> 
+                                <th>Recommended Actions</th> 
+                            </tr> 
+                        </thead> 
+                        <tbody> 
+                            @foreach (var prediction in _predictions) 
+                            { 
+                                <tr> 
+                                    <td> 
+                                        <a href="/students/@prediction.StudentId">@prediction.StudentName</a> 
+                                    </td> 
+                                    <td> 
+                                        <span class="badge @GetPredictionBadgeClass(prediction.Prediction)"> 
+                                            @prediction.Prediction 
+                                        </span> 
+                                    </td> 
+                                  <td>@(prediction.Probability.ToString("P1"))</td> 
+                                    <td> 
+                                        <ul> 
+                                            @foreach (var action in prediction.RecommendedActions) 
+                                            { 
+                                                <li>@action</li> 
+                                            } 
+                                        </ul> 
+                                    </td> 
+                                </tr> 
+                            } 
+                        </tbody> 
+                    </table> 
+                </div> 
+            </div> 
+             
+            <div class="row mt-4"> 
+                <div class="col-md-6"> 
+                    <div class="card"> 
+                        <div class="card-header"> 
+                            <h4>Grade Distribution</h4> 
+                        </div> 
+                        <div class="card-body"> 
+                            <Chart GradeDistribution="@_stats.GradeDistribution" /> 
+                        </div> 
+                    </div> 
+                </div> 
+                <div class="col-md-6"> 
+                    <div class="card"> 
+                        <div class="card-header"> 
+                            <h4>Attendance Trends</h4> 
+                        </div> 
+                        <div class="card-body"> 
+                            <AttendanceChart AttendanceData="@_stats.AttendanceTrends" /> 
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+        } 
+    </Authorized> 
+    <NotAuthorized> 
+        <p>You're not authorized to view this page.</p> 
+    </NotAuthorized> 
+</AuthorizeView> 
+ 
+@code { 
+    private IEnumerable<PredictionResultDto> _predictions; 
+    private DashboardStatsDto _stats; 
+     
+    protected override async Task OnInitializedAsync() 
+    { 
+        _predictions = await 
+        AnalyticsService.GetPerformancePredictionsAsync(); 
+        _stats = await AnalyticsService.GetDashboardStatsAsync(); 
+    } 
+     
+    private string GetPrzedictionBadgeClass(string prediction)
+    { 
+        return prediction switch
+        { 
+            "Excelling" => "bg-success", 
+            "On Track" => "bg-primary", 
+            "At Risk" => "bg-warning", 
+            _ => "bg-secondary" 
+        }; 
+    } 
+} 

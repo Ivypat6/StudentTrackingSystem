@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentTrackingSystem.Shared.Dto
+namespace StudentTrackingSystem.Service.Services
 {
-    public class DashboardStatsDto
+    internal class IPredictionService
     {
     }
 }

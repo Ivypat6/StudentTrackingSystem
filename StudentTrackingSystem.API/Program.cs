@@ -18,7 +18,7 @@ options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-IIdentityServerBuilder identityServerBuilder = builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();

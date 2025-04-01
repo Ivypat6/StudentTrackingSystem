@@ -1,5 +1,75 @@
-﻿<h3>Students</h3>
-
-@code {
-
-}
+﻿@page "/students" 
+@using StudentTrackingSystem.Shared.Dto
+@inject IStudentService StudentService 
+@inject NavigationManager Navigation 
+ 
+<AuthorizeView Roles="Admin,Teacher,Student"> 
+    <Authorized> 
+      <h3>Students</h3> 
+         
+        @if (_students == null) 
+        { 
+            <p>Loading...</p> 
+        } 
+        else 
+        { 
+            <table class="table"> 
+                <thead> 
+                    <tr> 
+                        <th>Name</th> 
+                        <th>Email</th> 
+                        <th>Contact</th> 
+                        <th>Actions</th> 
+                    </tr> 
+                </thead> 
+                <tbody> 
+                    @foreach (var student in _students) 
+                    { 
+                        <tr> 
+                            <td>@student.FirstName @student.LastName</td> 
+                            <td>@student.Email</td> 
+                            <td>@student.ContactNumber</td> 
+                            <td> 
+                                <button @onclick="() => ViewStudent(student.Id)" class="btn btn-primary">View</button> 
+                                <AuthorizeView Roles="Admin,Teacher"> 
+                                    <button @onclick="() => EditStudent(student.Id)" class="btn btn-secondary">Edit</button> 
+                                </AuthorizeView> 
+                            </td> 
+                        </tr> 
+                    } 
+                </tbody> 
+            </table> 
+             
+            <AuthorizeView Roles="Admin,Teacher"> 
+                <button @onclick="AddStudent" class="btn btn success">Add New Student</button> 
+            </AuthorizeView> 
+        } 
+    </Authorized> 
+    <NotAuthorized> 
+        <p>You're not authorized to view this page.</p> 
+    </NotAuthorized> 
+</AuthorizeView> 
+ 
+@code { 
+    private IEnumerable <StudentDto> _students; 
+     
+    protected override async Task OnInitializedAsync() 
+    { 
+        _students = await StudentService.GetAllStudentsAsync(); 
+    } 
+     
+    private void ViewStudent(int id) 
+    { 
+        Navigation.NavigateTo($"/students/{id}"); 
+    } 
+     
+    private void EditStudent(int id) 
+    { 
+        Navigation.NavigateTo($"/students/edit/{id}"); 
+    } 
+     
+    private void AddStudent() 
+    { 
+        Navigation.NavigateTo("/students/add"); 
+    } 
+} 

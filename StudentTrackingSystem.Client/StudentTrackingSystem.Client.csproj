@@ -7,10 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Analytics.v3" Version="1.68.0.1679" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.Extensions" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StudentTrackingSystem.Service\StudentTrackingSystem.Service.csproj" />
   </ItemGroup>
 
 </Project>

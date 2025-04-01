@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StudentTrackingSystem.Data.Models;
 using StudentTrackingSystem.Data.Reositories.Interface;
 using StudentTrackingSystem.Shared.Dto;
 using System;
