@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StudentTrackingSystem.Data;
+using StudentTrackingSystem.Data.Models;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container. 
-var connectionString =
-builder.Configuration.GetConnectionString("DefaultConnection"); builder
- .Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+var connectionString =builder.Configuration.GetConnectionString("DefaultConnection"); builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -17,13 +18,13 @@ options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+IIdentityServerBuilder identityServerBuilder = builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
 
 // Add other services 
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 

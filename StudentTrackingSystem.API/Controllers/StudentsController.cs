@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudentTrackingSystem.Service.Services;
+using StudentTrackingSystem.Shared.Dto;
 
 namespace StudentTrackingSystem.API.Controllers
 {

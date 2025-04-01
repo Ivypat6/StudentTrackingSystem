@@ -1,0 +1,53 @@
+﻿@using System.Text.Json
+@inject IJSRuntime JSRuntime
+
+<div id="@($"chart-{Guid.NewGuid()}")" style="height: 300px;"></div>
+
+@code {
+    [Parameter]
+    public Dictionary<string, int> GradeDistribution
+    { get; set; }
+
+    private string _chartId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && GradeDistribution != null)
+        {
+            _chartId = $"chart-{Guid.NewGuid()}";
+            await JSRuntime.InvokeVoidAsync("renderGradeChart",
+    _chartId,
+                JsonSerializer.Serialize(GradeDistribution.Keys),
+                JsonSerializer.Serialize(GradeDistribution.Values));
+        }
+    }
+}
+
+Add this to wwwroot/js/charts.js:
+function renderGradeChart(chartId, labelsJson, dataJson) {
+    const labels = JSON.parse(labelsJson);
+    const data = JSON.parse(dataJson);
+
+    const ctx = document.getElementById(chartId).getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of Students',
+                data: data,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
